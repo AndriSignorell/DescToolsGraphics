@@ -17,10 +17,10 @@ the user coordinates for the given lines
 \description{
 Functions like \code{mtext} or \code{axis} use the \code{line} argument to
 set the distance from plot. Sometimes it's useful to have the distance in
-user coordinates. \code{LineToUser()} does this nontrivial conversion.
+user coordinates. \code{lineToUser()} does this nontrivial conversion.
 }
 \details{
-For the \code{LineToUser} function to work, there must be an open plot.
+For the \code{lineToUser} function to work, there must be an open plot.
 }
 \examples{
 

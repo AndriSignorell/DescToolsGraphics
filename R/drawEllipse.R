@@ -4,7 +4,7 @@
 #' 
 #' Draw one or several ellipses on an existing plot. 
 #' 
-#' Use \code{\link[DescToolsX]{degToRad}} if you want to define rotation angle in degrees.
+#' Use \code{\link{degToRad}} if you want to define rotation angle in degrees.
 #' 
 #' @param x,y the x and y co-ordinates for the centre(s) of the ellipse(s). 
 #' @param radius.x a scalar or a vector giving the semi-major axis of the

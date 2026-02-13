@@ -9,18 +9,52 @@
 
 
 
-# internal function to restore settings after a plot has been created
+# # internal function to restore settings after a plot has been created
+# 
+# .withGraphicsState <- function(expr) {
+#   
+#   op <- par(no.readonly = TRUE)
+#   ok <- FALSE
+#   
+#   on.exit({
+#     # layout(matrix(1))
+#     par(op)
+#     
+#     if (ok) {   ## && !is.null(.getOption("stamp"))) {
+#       tryCatch(stamp(), error = function(e) NULL)
+#     }
+#     
+#   }, add = TRUE)
+#   
+#   force(expr)
+#   ok <- TRUE
+#   
+# }
+# 
 
+
+# with layout saving option
 .withGraphicsState <- function(expr) {
   
   op <- par(no.readonly = TRUE)
+  opt <- options()
+  
+  hasLayout <- {
+    n <- layout.show(n = 0)
+    isTRUE(n > 0)
+  }
+  
   ok <- FALSE
   
   on.exit({
-    layout(matrix(1))
     par(op)
+    options(opt)
     
-    if (ok && !is.null(.getOption("stamp"))) {
+    if (hasLayout) {
+      ## layout wiederherstellen (falls ihr das implementiert habt)
+    }
+
+    if (ok) {
       tryCatch(stamp(), error = function(e) NULL)
     }
     
@@ -28,8 +62,8 @@
   
   force(expr)
   ok <- TRUE
-  
 }
+
 
 
 

@@ -87,7 +87,7 @@ plotECDF <- function(x, breaks=NULL, col=Pal()[1],
   axargs1 <- list(side = 2, at = seq(0, 1, 0.25),
                            # fm(seq(0, 1, 0.25), ldigits = 0, digits=2),
                   labels = c(".00", ".25", ".50", ".75", "1.00"),
-                  las = 1, xaxs = "e", lwd.axis=1) 
+                  xaxs = "e", lwd.axis=1) 
   
   axargs1 <- .clearArgs(provided = c(as.list(environment()), list(...)),  # all provided arguments and their values 
                        valid=validargs,                                  # vector or names with all validargs

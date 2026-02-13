@@ -31,7 +31,7 @@ least contain 3 points.}
 you want to combine several geometric structures to a single polygon.}
 }
 \value{
-\code{DrawBezier} invisibly returns a list of the calculated
+\code{drawBezier} invisibly returns a list of the calculated
 coordinates for all shapes.
 }
 \description{

@@ -10,7 +10,8 @@ stamp(txt = NULL, las = NULL, cex = 0.6, col = "grey40")
 \item{txt}{an optional single text string. If it is not given, the function
 will look for a defined option named \code{stamp}. If not found the current
 date will be taken as text. If the stamp option is defined as expression the
-function will evaluate it. This can be used to define dynamic texts.}
+function will evaluate it. This can be used to define dynamic texts. Use \code{NA}
+to not display a stamp at all.}
 
 \item{las}{numeric in \code{c(1, 3)}, defining direction of the text. 1
 means horizontal, 3 vertical. Default is taken from \code{par("las")}.}

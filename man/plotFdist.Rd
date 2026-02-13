@@ -9,6 +9,7 @@ plotFdist(
   main = deparse(substitute(x)),
   xlab = "",
   xlim = NULL,
+  na.rm = FALSE,
   args.hist = NULL,
   args.rug = NA,
   args.dens = NULL,
@@ -18,23 +19,23 @@ plotFdist(
   args.curve.ecdf = NA,
   heights = NULL,
   pdist = NULL,
-  na.rm = FALSE,
-  cex.axis = NULL,
-  cex.main = NULL,
-  mar = NULL,
-  las = 1
+  ...
 )
 }
 \arguments{
 \item{x}{the numerical variable, whose distribution is to be plotted.}
 
-\item{main}{main title of the plot.}
+\item{main}{main title of the plot. Use \code{NA} to suppress the title.}
 
 \item{xlab}{label of the x-axis, defaults to \code{""}. (The name of the
 variable is typically placed in the main title and would be redundant here.)}
 
 \item{xlim}{range of the x-axis, defaults to a pretty \code{range(x, na.rm =
 TRUE)}.}
+
+\item{na.rm}{logical, should \code{NA}s be omitted? Histogram and boxplot
+could do without this option, but the density-function refuses to plot with
+missings. Defaults to \code{FALSE}.}
 
 \item{args.hist}{list of additional arguments to be passed to the histogram
 \code{hist()}.  The defaults chosen when setting \code{args.hist = NULL} are
@@ -90,21 +91,8 @@ there will be no distance between the histogram, the boxplot and the
 ecdf-plot. This can be useful for instance in case that the x-axis has to be
 added to the histogram.}
 
-\item{na.rm}{logical, should \code{NA}s be omitted? Histogram and boxplot
-could do without this option, but the density-function refuses to plot with
-missings. Defaults to \code{FALSE}.}
-
-\item{cex.axis}{character extension factor for the axes.}
-
-\item{cex.main}{character extension factor for the main title. Must be set
-in dependence of the plot parts in order to get a harmonic view.}
-
-\item{mar}{A numerical vector of the form \code{c(bottom, left, top, right)}
-which gives the number of lines of outer margin to be specified on the four
-sides of the plot. The default is \code{c(0, 0, 3, 0)}.}
-
-\item{las}{numeric in \code{c(0,1,2,3)}; the orientation of axis labels. See
-\code{\link{par}}.}
+\item{\dots}{can be used to set graphic parameters (\code{\link{par}})
+as cex.main, las etc.}
 }
 \description{
 This function was developed to create a univariate graphical representation

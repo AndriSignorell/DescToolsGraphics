@@ -3,12 +3,12 @@
 #' 
 #' Convert degrees to radians (and back again). 
 #' 
-#' @name DegToRad
-#' @aliases DegToRad RadToDeg
+#' @name degToRad
+#' @aliases degToRad radToDeg
 #' @param deg a vector of angles in degrees. 
 #' @param rad a vector of angles in radians. 
-#' @return DegToRad returns a vector of the same length as \code{deg} with the
-#' angles in radians.\cr RadToDeg returns a vector of the same length as
+#' @return degToRad returns a vector of the same length as \code{deg} with the
+#' angles in radians.\cr radToDeg returns a vector of the same length as
 #' \code{rad} with the angles in degrees. 
 #' @author Andri Signorell <andri@@signorell.net> 
 #' 
@@ -21,12 +21,12 @@
 
 
 
-#' @rdname DegToRad
+#' @rdname degToRad
 #' @export
 degToRad <- function(deg) deg * pi /180
 
 
-#' @rdname DegToRad
+#' @rdname degToRad
 #' @export
 radToDeg <- function(rad) rad * 180 / pi
 

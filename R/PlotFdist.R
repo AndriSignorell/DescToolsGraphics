@@ -20,7 +20,7 @@
 #' much. .
 #' 
 #' @param x the numerical variable, whose distribution is to be plotted. 
-#' @param main main title of the plot. 
+#' @param main main title of the plot. Use \code{NA} to suppress the title.
 #' @param xlab label of the x-axis, defaults to \code{""}. (The name of the
 #' variable is typically placed in the main title and would be redundant here.)
 #' @param xlim range of the x-axis, defaults to a pretty \code{range(x, na.rm =
@@ -80,16 +80,10 @@
 #' could do without this option, but the density-function refuses to plot with
 #' missings. Defaults to \code{FALSE}. 
 #' 
-#' @param cex.axis character extension factor for the axes.
-#' @param cex.main character extension factor for the main title. Must be set
-#' in dependence of the plot parts in order to get a harmonic view.
+#' @param \dots can be used to set graphic parameters (\code{\link{par}}) 
+#' as cex.main, las etc. 
 #' 
-#' @param mar A numerical vector of the form \code{c(bottom, left, top, right)}
-#' which gives the number of lines of outer margin to be specified on the four
-#' sides of the plot. The default is \code{c(0, 0, 3, 0)}.
 #' 
-#' @param las numeric in \code{c(0,1,2,3)}; the orientation of axis labels. See
-#' \code{\link{par}}.
 #' 
 #' @author Andri Signorell <andri@@signorell.net> 
 #' @seealso \code{\link{hist}}, \code{\link{boxplot}}, \code{\link{ecdf}},
@@ -159,6 +153,7 @@
 #' @export
 plotFdist <- function (x, main = deparse(substitute(x)), xlab = ""
                        , xlim = NULL
+                       , na.rm = FALSE
                        # , do.hist =NULL # !(all(IsWhole(x,na.rm=TRUE)) & length(unique(na.omit(x))) < 13)
                        # do.hist overrides args.hist, add.dens and rug
                        , args.hist = NULL          # list( breaks = "Sturges", ...)
@@ -170,11 +165,12 @@ plotFdist <- function (x, main = deparse(substitute(x)), xlab = ""
                        , args.curve.ecdf = NA      # list( ...), NA for no dcurve
                        , heights = NULL            # heights (hist, boxplot, ecdf) used by layout
                        , pdist = NULL              # distances of the plots, default = 0
-                       , na.rm = FALSE, cex.axis = NULL, cex.main = NULL, mar = NULL, las=1) {
+                       # , cex.axis = NULL, cex.main = NULL, mar = NULL, las=1
+                       , ...) {
   
   
   
-  .PlotMass <- function(x = x, xlab = "", ylab = "",
+  .plotMass <- function(x = x, xlab = "", ylab = "",
                         xaxt = ifelse(add.boxplot || add.ecdf, "n", "s"), xlim = xlim, ylim = NULL, main = NA, las = 1,
                         yaxt="n", col=1, lwd=3, pch=NA, col.pch=1, cex.pch=1, bg.pch=0, cex.axis=cex.axis, ...)   {
     
@@ -205,13 +201,26 @@ plotFdist <- function (x, main = deparse(substitute(x)), xlab = ""
   # default colors are Helsana CI-colors
   
   # dev question: should dots be passed somewhere??
-
+  
+  # usr <- par(no.readonly=TRUE)
+  # on.exit({
+  #   graphics::par(usr)               # reset par on exit  
+  #   graphics::layout(matrix(1))      # reset layout on exit    
+  # }, add=TRUE)
+  
   .withGraphicsState({
     
-    if(!is.null(cex.axis)) par(cex.axis=cex.axis)
-    if(!is.null(cex.main)) par(cex.axis=cex.main)
+    # if(!is.null(cex.axis)) par(cex.axis=cex.axis)
+    # if(!is.null(cex.main)) par(cex.axis=cex.main)
+
+    .setDescToolsXOption(stamp=NULL)
+
+    .applyParFromDots(...)
     
-    opt_stamp <- .setDescToolsXOption(stamp=NULL)
+    if(!"mar" %in% ...names()) mar <- NULL else mar <- par("mar")
+    if(!"las" %in% ...names()) las <- 1 else las <- par("las")
+    if(!"cex.axis" %in% ...names()) cex.axis <- NULL else cex.axis = par(cex.axis)
+
     
     add.boxplot <- !identical(args.boxplot, NA)
     add.rug <- !identical(args.rug, NA)
@@ -237,19 +246,20 @@ plotFdist <- function (x, main = deparse(substitute(x)), xlab = ""
     
     # layout changes par settings arbitrarily, especially cex in the first case
     # so store here and reset
+    
+    # ******
+    # the font is too small without this...
     ppp <- par()[grep("cex", names(par()))]
+    
     if (add.ecdf && add.boxplot) {
       layout(matrix(c(1, 2, 3), nrow = 3, byrow = TRUE), heights = heights, TRUE)
-      # if(is.null(cex.axis)) cex.axis <- 1.3
-      # if(is.null(cex.main)) cex.main <- 1.7
     } else {
       if((add.ecdf || add.boxplot)) {
         layout(matrix(c(1, 2), nrow = 2, byrow = TRUE), heights = heights[1:2], TRUE)
-        #      if(is.null(cex.axis)) cex.axis <- 0.9
-        # } else {
-        #   if(is.null(cex.axis)) cex.axis <- 0.95
       }
     }
+    
+    # ******
     par(ppp)  # reset unwanted layout changes
     
     # plot histogram, change margin if no main title
@@ -305,12 +315,13 @@ plotFdist <- function (x, main = deparse(substitute(x)), xlab = ""
       if (add.dens) {
         # preset default values
         args.dens1 <- list(x = x, bw = (if(length(x) > 1000){"nrd0"} else {"SJ"}),
-                           col = .getOption("palette")[2], lwd = 2, lty = "solid")
+                           col = .getOption("palette", default = c("#8296C4", "#9A0941"))[2], 
+                           lwd = 2, lty = "solid")
         if (!is.null(args.dens)) {
           args.dens1[names(args.dens)] <- args.dens
         }
         
-        # x.dens <- doCall("density", args.dens1[-match(c("col",
+        # x.dens <- DoCall("density", args.dens1[-match(c("col",
         #                                                  "lwd", "lty"), names(args.dens1))])
         #
         # # overwrite the ylim if there's a larger density-curve
@@ -342,15 +353,10 @@ plotFdist <- function (x, main = deparse(substitute(x)), xlab = ""
       ticks <- axTicks(2)
       n <- max(floor(log(ticks, base = 10)))    # highest power of ten
       if(abs(n)>2) {
-        # *** maybe check this:  *****
-        lab <- .fm_num(ticks * 10^(-n), 
-                  digits=max(.nDec(as.character(zapsmall(ticks*10^(-n))))))
+        lab <- format(ticks * 10^(-n), digits=max(.nDec(as.character(zapsmall(ticks*10^(-n))))))
+        axis(side=2, at=ticks, labels=lab, las=las, cex.axis=par("cex.axis"))
         
-        axis(side=2, at=ticks, labels=lab, las=las, 
-                       cex.axis=par("cex.axis"))
-        
-        text(x=par("usr")[1], y=par("usr")[4], 
-             bquote(~~~x~10^.(n)), xpd=NA, 
+        text(x=par("usr")[1], y=par("usr")[4], bquote(~~~x~10^.(n)), xpd=NA, 
              pos = 3, cex=par("cex.axis") * 0.8)
         
       } else {
@@ -363,18 +369,19 @@ plotFdist <- function (x, main = deparse(substitute(x)), xlab = ""
       }
       
       if (add.dens) {
-        lines(x.dens, col = args.dens1$col, lwd = args.dens1$lwd, 
-                        lty = args.dens1$lty)
+        lines(x.dens, col = args.dens1$col, lwd = args.dens1$lwd, lty = args.dens1$lty)
       }
       
       
       # plot special distribution curve
       if (add.dcurve) {
         # preset default values
-        args.curve1 <- list(expr = parse(text = gettextf("dnorm(x, %s, %s)", 
-                                                         mean(x), stats::sd(x))),
+        args.curve1 <- list(expr = parse(text = gettextf("dnorm(x, %s, %s)", mean(x), sd(x))),
                             add = TRUE,
-                            n = 500, col = Pal()[3], lwd = 2, lty = "solid")
+                            n = 500, 
+                            col = .getOption("palette", 
+                                             default=c("#8296C4", "#9A0941","#F08100"))[3], 
+                            lwd = 2, lty = "solid")
         if (!is.null(args.curve)) {
           args.curve1[names(args.curve)] <- args.curve
         }
@@ -415,8 +422,15 @@ plotFdist <- function (x, main = deparse(substitute(x)), xlab = ""
           args.hist1$col.pch <- args.hist1$col
       }
       
-      doCall(.PlotMass, args.hist1)
-
+      doCall(.plotMass, args.hist1)
+      
+      
+      # plot(prop.table(table(x)), type = "h", xlab = "", ylab = "",
+      #      xaxt = "n", xlim = args.hist1$xlim, main = NA,
+      #      frame.plot = FALSE, las = 1, cex.axis = cex.axis, panel.first = {
+      #        abline(h = axTicks(2), col = "grey", lty = "dotted")
+      #        abline(h = 0, col = "black")
+      #      })
     }
     
     # boxplot
@@ -425,7 +439,7 @@ plotFdist <- function (x, main = deparse(substitute(x)), xlab = ""
       args.boxplot1 <- list(x = x, frame.plot = FALSE, main = NA, boxwex = 1,
                             horizontal = TRUE, ylim = args.hist1$xlim, col="grey95",
                             at = 1, xaxt = ifelse(add.ecdf, "n", "s"),
-                            outcex = 1.3, outcol = grDevices::rgb(0,0,0,0.5), cex.axis=cex.axis,
+                            outcex = 1.3, outcol = rgb(0,0,0,0.5), cex.axis=cex.axis,
                             pch.mean=3, col.meanci="grey85")
       if (!is.null(args.boxplot)) {
         args.boxplot1[names(args.boxplot)] <- args.boxplot
@@ -433,7 +447,6 @@ plotFdist <- function (x, main = deparse(substitute(x)), xlab = ""
       plot(1, type="n", xlim=args.hist1$xlim, ylim=c(0,1)+.5, xlab="", ylab="", axes=FALSE)
       grid(ny=NA)
       if(length(x)>1){
-        # ci <- DescToolsX::MeanCI(x, na.rm=TRUE)
         ci <- .meanCI_raw(x)
         rect(xleft = ci[2], ybottom = 0.62, xright = ci[3], ytop = 1.35,
              col=args.boxplot1$col.meanci, border=NA)
@@ -459,7 +472,7 @@ plotFdist <- function (x, main = deparse(substitute(x)), xlab = ""
       # faster, than plot.ecdf, which will break down in performance
       # however, if there are only few unique values, the histogram will not be correct and might result in
       # gross deviations.
-      # example: plotECDF(rep(-40, 2001), breaks = 1000)
+      # example: PlotECDF(rep(-40, 2001), breaks = 1000)
       
       # we provisionally use the number of classes length(x.hist$mids) as proxy for good distribution
       # not sure, how robust this is...
@@ -467,9 +480,10 @@ plotFdist <- function (x, main = deparse(substitute(x)), xlab = ""
       args.ecdf1 <- list(x = x, main = NA, 
                          breaks={if(length(x)>1000 & length(x.hist$mids) > 10) 1000 else NULL}, 
                          ylim=c(0,1),
-                         xlim = args.hist1$xlim, col = Pal()[1], lwd = 2,
-                         xlab = "", ylab = "", 
-                         frame.plot = FALSE, cex.axis=cex.axis)
+                         xlim = args.hist1$xlim, 
+                         col = .getOption("palette", default = c("#8296C4"))[1], 
+                         lwd = 2, xlab = "", ylab = "", 
+                         frame.plot = FALSE, cex.axis=cex.axis, las=las)
       if (!is.null(args.ecdf)) {
         args.ecdf1[names(args.ecdf)] <- args.ecdf
       }
@@ -479,8 +493,7 @@ plotFdist <- function (x, main = deparse(substitute(x)), xlab = ""
       # plot special distribution ecdf curve
       if (add.pcurve) {
         # preset default values
-        args.curve.ecdf1 <- list(expr = parse(text = gettextf("pnorm(x, %s, %s)", 
-                                                              mean(x), stats::sd(x))),
+        args.curve.ecdf1 <- list(expr = parse(text = gettextf("pnorm(x, %s, %s)", mean(x), sd(x))),
                                  add = TRUE,
                                  n = 500, col = Pal()[3], lwd = 2, lty = "solid")
         if (!is.null(args.curve.ecdf)) {
@@ -507,15 +520,8 @@ plotFdist <- function (x, main = deparse(substitute(x)), xlab = ""
     if(!identical(xlab, "")) {
       title(xlab=xlab)
     }
-    
-    # reset stamp option to optionally place the stamp on the last plot
-    options(opt_stamp)
-    
-    # if(!is.null(.getOption("stamp")))
-    #   stamp()
-  
-    # close: .withGraphicsState
-    })
+
+
+  })  # close .withGraphicsState
   
 }
-

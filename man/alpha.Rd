@@ -26,7 +26,7 @@ extended by the alpha channel as hex-number (#rrggbbaa).
 \description{
 Add transparency to a color defined by its name or number. The function
 first converts the color to RGB and then appends the alpha channel.
-\code{fade()} combines \code{colToOpaque(SetAlpha(col))}.
+\code{fade()} combines \code{colToOpaque(alpha(col))}.
 }
 \details{
 All arguments are recyled as necessary.

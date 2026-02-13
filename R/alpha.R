@@ -3,7 +3,7 @@
 #' 
 #' Add transparency to a color defined by its name or number. The function
 #' first converts the color to RGB and then appends the alpha channel.
-#' \code{fade()} combines \code{colToOpaque(SetAlpha(col))}. 
+#' \code{fade()} combines \code{colToOpaque(alpha(col))}. 
 #' 
 #' All arguments are recyled as necessary. 
 #' 
@@ -48,7 +48,7 @@ alpha <- function(col, alpha=0.5) {
 #' @rdname alpha
 #' @export
 fade <- function(col, ...){
-  ColToOpaque(SetAlpha(col, ...))
+  ColToOpaque(alpha(col, ...))
 }
 
 

@@ -24,7 +24,7 @@
 #' \code{FALSE} only the xy-points are calculated and returned.  Use this if
 #' you want to combine several geometric structures to a single polygon.
 #' 
-#' @return \code{DrawBezier} invisibly returns a list of the calculated
+#' @return \code{drawBezier} invisibly returns a list of the calculated
 #' coordinates for all shapes.
 #' 
 #' @author Frank E Harrell Jr <f.harrell@@vanderbilt.edu>

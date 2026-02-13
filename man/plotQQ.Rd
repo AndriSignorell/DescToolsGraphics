@@ -12,9 +12,9 @@ plotQQ(
   ylab = NULL,
   datax = FALSE,
   add = FALSE,
-  args.qqline = NULL,
   conf.level = 0.95,
   args.cband = NULL,
+  args.qqline = NULL,
   ...
 )
 }
@@ -37,6 +37,14 @@ required arguments. Default is \code{qnorm()}. See examples.}
 \item{add}{logical specifying if the points should be added to an already
 existing plot; defaults to \code{FALSE}.}
 
+\item{conf.level}{confidence level for the confidence interval. Set this to
+\code{NA}, if no confidence band should be plotted.  Default is \code{0.95}.
+The confidence intervals are calculated pointwise method based on a
+Kolmogorov-Smirnov distribution.}
+
+\item{args.cband}{list of arguments for the confidence band, such as color
+or border (see \code{\link{drawBand}}).}
+
 \item{args.qqline}{arguments for the qqline. This will be estimated as a
 line through the 25\\% and 75\\% quantiles by default, which is the same
 procedure as \code{\link{qqline}()} does for normal distribution (instead of
@@ -46,14 +54,6 @@ values. Also the method for calculating the quantiles can be defined
 (default is 7, see \code{\link{quantile}}). The line defaults are set to
 \code{col = par("fg")}, \code{lwd = par("lwd")} and \code{lty = par("lty")}.
 No line will be plotted if \code{args.qqline} is set to \code{NA}.}
-
-\item{conf.level}{confidence level for the confidence interval. Set this to
-\code{NA}, if no confidence band should be plotted.  Default is \code{0.95}.
-The confidence intervals are calculated pointwise method based on a
-Kolmogorov-Smirnov distribution.}
-
-\item{args.cband}{list of arguments for the confidence band, such as color
-or border (see \code{\link{drawBand}}).}
 
 \item{\dots}{the dots are passed to the plot function.}
 }

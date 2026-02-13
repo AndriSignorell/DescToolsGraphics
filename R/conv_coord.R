@@ -5,7 +5,7 @@
 #' and vice versa. 
 #' 
 #' Angles are in radians, not degrees (i.e., a right angle is pi/2). Use
-#' \code{\link[DescToolsX]{degToRad}} to convert, if you don't wanna do it by yourself.\cr
+#' \code{\link{degToRad}} to convert, if you don't wanna do it by yourself.\cr
 #' All parameters are recycled if necessary. 
 #' 
 #' @name conv_coord

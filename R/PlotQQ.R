@@ -74,9 +74,12 @@
 
 
 #' @export
-plotQQ <- function(x, qdist=stats::qnorm, main=NULL, xlab=NULL, ylab=NULL, 
+plotQQ <- function(x, qdist=stats::qnorm, 
+                   main=NULL, xlab=NULL, ylab=NULL, 
                    datax=FALSE, add=FALSE,
-                   args.qqline=NULL, conf.level=0.95, args.cband = NULL, ...) {
+                   conf.level=0.95, 
+                   args.cband = NULL, 
+                   args.qqline=NULL, ...) {
   
 
   .withGraphicsState({
@@ -87,13 +90,10 @@ plotQQ <- function(x, qdist=stats::qnorm, main=NULL, xlab=NULL, ylab=NULL,
     # y <- rexp(100, 1/10)
     # plotQQ(y, function(p) qexp(p, rate=1/10))
     
+    main <- main %||% gettextf("Q-Q-Plot (%s)", deparse(substitute(qdist))[1L])
+    xlab <- xlab %||% "Theoretical Quantiles"
+    ylab <- ylab %||% "Sample Quantiles"
     
-    # resolve potential pars given in the dots...
-    par(
-      main = .resolvePar("main", main, "Q-Q Plot"),
-      xlab = .resolvePar("xlab", xlab, "Theoretical Quantiles"),
-      ylab = .resolvePar("ylab", ylab, "Sample Quantiles")
-    )
     .applyParFromDots(...)
     
     y <- sort(x)
@@ -101,15 +101,11 @@ plotQQ <- function(x, qdist=stats::qnorm, main=NULL, xlab=NULL, ylab=NULL,
     x <- qdist(p)
     
     if(datax){
+      # Should data values be on the x-axis?
       xy <- x
       x <- y
       y <- xy
-      rm(xy)
     }
-    
-    if(is.null(main)) main <- gettextf("Q-Q-Plot (%s)", deparse(substitute(qdist)))
-    if(is.null(xlab)) xlab <- "Theoretical Quantiles"
-    if(is.null(ylab)) ylab <- "Sample Quantiles"
     
     if(!add)
       plot(x=x, y, main=main, xlab=xlab, ylab=ylab, type="n", ...)
@@ -117,18 +113,10 @@ plotQQ <- function(x, qdist=stats::qnorm, main=NULL, xlab=NULL, ylab=NULL,
     # add confidence band if desired
     if (!(is.na(conf.level) || identical(args.cband, NA)) ) {
       
-      # cix <- qdist(ppoints(x))
-      # ciy <- replicate(1000, sort(qdist(runif(length(x)))))
-      # ci <- apply(ciy, 1, quantile, c(-1, 1) * conf.level/2 + 0.5)
-      
-      args.cband1 <- list(col = alpha(Pal()[1], 0.25), border = NA)
+      args.cband1 <- list(col = alpha(.getOption("palette", default = c("#8296C4", "#9A0941"))[1], 0.25), border = NA)
       if (!is.null(args.cband))
         args.cband1[names(args.cband)] <- args.cband
-      
-      # (x, distribution = qnorm,
-      #  conf = 0.95, conf.method = "both",
-      #  reference.line.method = "quartiles") {
-  
+
       ci <- .create.qqplot.fit.confidence.interval(
                       y, distribution = qdist, 
                       conf=conf.level, conf.method = "pointwise");
@@ -140,6 +128,7 @@ plotQQ <- function(x, qdist=stats::qnorm, main=NULL, xlab=NULL, ylab=NULL,
       
     }
     
+    # draw points last so they stay on top of confidence band
     points(x=x, y=y, ...)
     
     # John Fox implements an envelope option in car::qqplot, in the sense of:
@@ -158,19 +147,7 @@ plotQQ <- function(x, qdist=stats::qnorm, main=NULL, xlab=NULL, ylab=NULL,
     #     lines(z, upper, lty = 2, lwd = lwd, col = col.lines)
     #     lines(z, lower, lty = 2, lwd = lwd, col = col.lines)
     #   }
-    
-    # example in qqplot
-    #
-    # ## "QQ-Chisquare" : --------------------------
-    # y <- rchisq(500, df = 3)
-    # ## Q-Q plot for Chi^2 data against true theoretical distribution:
-    # qqplot(qchisq(ppoints(500), df = 3), y,
-    #        main = expression("Q-Q plot for" ~~ {chi^2}[nu == 3]))
-    # qqline(y, distribution = function(p) qchisq(p, df = 3),
-    #        prob = c(0.1, 0.6), col = 2)
-    # mtext("qqline(*, dist = qchisq(., df=3), prob = c(0.1, 0.6))")
-    
-    
+
     # add qqline if desired
     if(!identical(args.qqline, NA)) {
       

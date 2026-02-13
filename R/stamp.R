@@ -14,7 +14,8 @@
 #' @param txt an optional single text string. If it is not given, the function
 #' will look for a defined option named \code{stamp}. If not found the current
 #' date will be taken as text. If the stamp option is defined as expression the
-#' function will evaluate it. This can be used to define dynamic texts.
+#' function will evaluate it. This can be used to define dynamic texts. Use \code{NA}
+#' to not display a stamp at all.
 #' @param las numeric in \code{c(1, 3)}, defining direction of the text. 1
 #' means horizontal, 3 vertical. Default is taken from \code{par("las")}.
 #' @param cex numeric \bold{c}haracter \bold{ex}pansion factor; multiplied by
@@ -34,6 +35,7 @@
 #' @export
 stamp <- function(txt = NULL, las = NULL, cex = 0.6, col="grey40") {
   
+
   ## resolve text
   if (is.null(txt)) {
     txt <- .getOption("stamp")
@@ -41,7 +43,10 @@ stamp <- function(txt = NULL, las = NULL, cex = 0.6, col="grey40") {
       txt <- format(Sys.time(), "%Y-%m-%d")
     } else if (is.expression(txt)) {
       txt <- eval(parse(text = txt))
-    }
+    } else if(is.na(txt)) {
+      # don't do anything if txt = NA
+      txt=""
+    }  
   }
   
   ## handle las locally
@@ -81,6 +86,6 @@ stamp <- function(txt = NULL, las = NULL, cex = 0.6, col="grey40") {
       col   = col
     )
   }
-  
+
   invisible(txt)
 }

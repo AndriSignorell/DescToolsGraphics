@@ -53,7 +53,7 @@ for all shapes.
 Draw one or several ellipses on an existing plot.
 }
 \details{
-Use \code{\link[DescToolsX]{degToRad}} if you want to define rotation angle in degrees.
+Use \code{\link{degToRad}} if you want to define rotation angle in degrees.
 }
 \examples{
 
