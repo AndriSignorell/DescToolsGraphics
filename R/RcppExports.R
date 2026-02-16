@@ -9,6 +9,14 @@ conv_DecToBin <- function(n) {
     .Call(`_DescToolsViz_conv_DecToBin`, n)
 }
 
+formatDateTime <- function(x, fmt, strict = TRUE, locale = "current") {
+    .Call(`_DescToolsViz_formatDateTime`, x, fmt, strict, locale)
+}
+
+formatNum <- function(x, digits = NULL, ldigits = NULL, big_mark = NULL, decimal_mark = NULL, sci_big = 9999L, sci_small = -9999L) {
+    .Call(`_DescToolsViz_formatNum`, x, digits, ldigits, big_mark, decimal_mark, sci_big, sci_small)
+}
+
 pSmirnov2x <- function(statistic, nx, ny) {
     .Call(`_DescToolsViz_pSmirnov2x`, statistic, nx, ny)
 }

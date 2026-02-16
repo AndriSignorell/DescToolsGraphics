@@ -34,7 +34,7 @@ cols <- c(alpha("limegreen", 0.4), colToOpaque(colToHex("limegreen"), 0.4), "lim
 barplot(c(1, 1.2, 1.3), col=cols, panel.first=abline(h=0.4, lwd=10, col="grey35"))
 }
 \seealso{
-\code{\link{colToHex}}, \code{\link[DescToolsX]{decToHex}},
+\code{\link{colToHex}}, \code{\link{decToHex}},
 \code{\link{rgbToHex}}
 }
 \author{

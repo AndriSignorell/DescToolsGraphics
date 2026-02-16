@@ -13,7 +13,7 @@
 #' is \code{FALSE}.
 #' @return numeric vector with the calculated midpoins 
 #' @author Andri Signorell <andri@@signorell.net> 
-#' @seealso \code{\link[DescToolsX]{moveAvg}}
+#' @seealso \code{\link{moveAvg}}
 #' @keywords univar
 #' @examples
 #' 

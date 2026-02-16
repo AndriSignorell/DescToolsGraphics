@@ -36,6 +36,37 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// formatDateTime
+CharacterVector formatDateTime(SEXP x, std::string fmt, bool strict, std::string locale);
+RcppExport SEXP _DescToolsViz_formatDateTime(SEXP xSEXP, SEXP fmtSEXP, SEXP strictSEXP, SEXP localeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
+    Rcpp::traits::input_parameter< std::string >::type fmt(fmtSEXP);
+    Rcpp::traits::input_parameter< bool >::type strict(strictSEXP);
+    Rcpp::traits::input_parameter< std::string >::type locale(localeSEXP);
+    rcpp_result_gen = Rcpp::wrap(formatDateTime(x, fmt, strict, locale));
+    return rcpp_result_gen;
+END_RCPP
+}
+// formatNum
+CharacterVector formatNum(NumericVector x, Nullable<IntegerVector> digits, Nullable<IntegerVector> ldigits, Nullable<CharacterVector> big_mark, Nullable<CharacterVector> decimal_mark, int sci_big, int sci_small);
+RcppExport SEXP _DescToolsViz_formatNum(SEXP xSEXP, SEXP digitsSEXP, SEXP ldigitsSEXP, SEXP big_markSEXP, SEXP decimal_markSEXP, SEXP sci_bigSEXP, SEXP sci_smallSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< Nullable<IntegerVector> >::type digits(digitsSEXP);
+    Rcpp::traits::input_parameter< Nullable<IntegerVector> >::type ldigits(ldigitsSEXP);
+    Rcpp::traits::input_parameter< Nullable<CharacterVector> >::type big_mark(big_markSEXP);
+    Rcpp::traits::input_parameter< Nullable<CharacterVector> >::type decimal_mark(decimal_markSEXP);
+    Rcpp::traits::input_parameter< int >::type sci_big(sci_bigSEXP);
+    Rcpp::traits::input_parameter< int >::type sci_small(sci_smallSEXP);
+    rcpp_result_gen = Rcpp::wrap(formatNum(x, digits, ldigits, big_mark, decimal_mark, sci_big, sci_small));
+    return rcpp_result_gen;
+END_RCPP
+}
 // pSmirnov2x
 double pSmirnov2x(double statistic, int nx, int ny);
 RcppExport SEXP _DescToolsViz_pSmirnov2x(SEXP statisticSEXP, SEXP nxSEXP, SEXP nySEXP) {
@@ -88,6 +119,8 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_DescToolsViz_between_num", (DL_FUNC) &_DescToolsViz_between_num, 5},
     {"_DescToolsViz_conv_DecToBin", (DL_FUNC) &_DescToolsViz_conv_DecToBin, 1},
+    {"_DescToolsViz_formatDateTime", (DL_FUNC) &_DescToolsViz_formatDateTime, 4},
+    {"_DescToolsViz_formatNum", (DL_FUNC) &_DescToolsViz_formatNum, 7},
     {"_DescToolsViz_pSmirnov2x", (DL_FUNC) &_DescToolsViz_pSmirnov2x, 3},
     {"_DescToolsViz_pKS2", (DL_FUNC) &_DescToolsViz_pKS2, 2},
     {"_DescToolsViz_pKolmogorov2x", (DL_FUNC) &_DescToolsViz_pKolmogorov2x, 2},

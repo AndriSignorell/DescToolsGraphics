@@ -16,7 +16,13 @@
 
 #'@export
 plot.Desc.table <- function(x, ...){
-  plotMosaic(x$pfreqr, ...)
+  
+  if(length(dim(x))>2){
+    plotMosaic(x$pfreqr, ...)
+  } else {
+    message("Sorry, plot not yet implemented for higher dimensional tables.")
+  }  
+  
 }
 
 

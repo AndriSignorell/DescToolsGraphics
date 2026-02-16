@@ -42,7 +42,7 @@ text(tab, x=x, y=b, col="red")
 
 }
 \seealso{
-\code{\link[DescToolsX]{moveAvg}}
+\code{\link{moveAvg}}
 }
 \author{
 Andri Signorell \href{mailto:andri@signorell.net}{andri@signorell.net}
